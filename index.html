@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AXL Team — Пакет кворков для KWORK</title>
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #111318;
+      --muted: #9aa4b2;
+      --text: #e9eef5;
+      --brand: #ff7a18;
+      --brand-2: #ffd166;
+      --ok: #34d399;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(ellipse at 10% -10%, rgba(255, 122, 24, 0.2) 0%, transparent 40%),
+                  radial-gradient(ellipse at 90% 20%, rgba(255, 209, 102, 0.15) 0%, transparent 40%),
+                  linear-gradient(180deg, #0a0b0f 0%, #0b0c10 100%);
+      background-attachment: fixed;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .container { 
+      max-width: 1080px; 
+      margin: 0 auto; 
+      padding: 32px 20px 80px; 
+    }
+    header { 
+      display: grid; 
+      gap: 14px; 
+      margin-bottom: 20px; 
+    }
+    .brand {
+      display: inline-flex; 
+      align-items: center; 
+      gap: 12px; 
+      font-weight: 800; 
+      letter-spacing: .3px; 
+      font-size: 26px;
+    }
+    .brand-badge {
+      display: inline-grid; 
+      place-items: center; 
+      width: 36px; 
+      height: 36px; 
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2)); 
+      color: #111;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+    }
+    .subtitle { 
+      color: var(--muted); 
+      margin-top: -6px; 
+      font-size: 18px;
+    }
+
+    .meta-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 12px; 
+      margin-top: 10px; 
+    }
+    .chip { 
+      background: #151922; 
+      color: #d9e2ec; 
+      border: 1px solid #222635; 
+      border-radius: 999px; 
+      padding: 8px 12px; 
+      font-size: 13px; 
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toc { 
+      margin: 26px 0 24px; 
+      padding: 18px; 
+      border-radius: var(--radius); 
+      background: #0f1219; 
+      border: 1px solid #1b2130; 
+    }
+    .toc h3 { 
+      margin: 0 0 10px; 
+      font-size: 16px; 
+      letter-spacing: .2px; 
+      color: #dfe7f1; 
+    }
+    .toc-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .toc a { 
+      display: inline-block; 
+      padding: 6px 12px;
+      text-decoration: none; 
+      color: #e4ebf3; 
+      font-size: 14px; 
+      background: rgba(27, 33, 48, 0.5);
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    .toc a:hover { 
+      color: var(--brand-2); 
+      background: rgba(27, 33, 48, 0.8);
+      transform: translateY(-2px);
+    }
+
+    .section { 
+      margin-top: 36px; 
+    }
+    .card { 
+      background: var(--card); 
+      border: 1px solid #1a1f2b; 
+      border-radius: var(--radius); 
+      box-shadow: var(--shadow); 
+      overflow: hidden; 
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,.4);
+    }
+    .card-header { 
+      display: grid; 
+      gap: 8px; 
+      padding: 22px 22px 0 22px; 
+    }
+    .eyebrow { 
+      color: var(--brand-2); 
+      font-size: 12px; 
+      letter-spacing: .4px; 
+      text-transform: uppercase; 
+      opacity: .9; 
+    }
+    .h2 { 
+      margin: 0; 
+      font-size: 24px; 
+      line-height: 1.25; 
+    }
+    .desc { 
+      color: var(--muted); 
+    }
+    .card-body { 
+      padding: 0 22px 22px 22px; 
+    }
+
+    .grid-2 { 
+      display: grid; 
+      grid-template-columns: repeat(2, minmax(0,1fr)); 
+      gap: 18px; 
+    }
+    .grid-3 { 
+      display: grid; 
+      grid-template-columns: repeat(3, minmax(0,1fr)); 
+      gap: 18px; 
+    }
+    @media (max-width: 860px) { 
+      .grid-2, .grid-3 { 
+        grid-template-columns: 1fr; 
+      } 
+      .h2 {
+        font-size: 20px;
+      }
+      .card-header, .card-body {
+        padding: 18px 18px 0 18px;
+      }
+      .card-body {
+        padding-bottom: 18px;
+      }
+    }
+
+    .list { 
+      margin: 0; 
+      padding-left: 18px; 
+    }
+    .list li { 
+      margin: 6px 0; 
+    }
+
+    .badge { 
+      display: inline-block; 
+      font-size: 12px; 
+      padding: 6px 10px; 
+      border-radius: 999px; 
+      border: 1px solid #273046; 
+      background: #0e1320; 
+      color: #cfe3ff; 
+    }
+
+    .table-wrap { 
+      overflow-x: auto; 
+      margin-top: 14px; 
+      -webkit-overflow-scrolling: touch;
+    }
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      min-width: 600px;
+    }
+    th, td { 
+      text-align: left; 
+      padding: 12px 10px; 
+      border-bottom: 1px solid #22293a; 
+      font-size: 14px; 
+    }
+    th { 
+      color: #c8d6e5; 
+      font-weight: 700; 
+      white-space: nowrap;
+    }
+    td { 
+      color: #dde6f2; 
+    }
+
+    .note { 
+      font-size: 13px; 
+      color: var(--muted); 
+      margin-top: 10px; 
+    }
+
+    .kw { 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 8px; 
+      margin-top: 10px; 
+    }
+    .kw .chip { 
+      background: #131826; 
+      border-color: #1e2639; 
+      color: #d9e3f2; 
+    }
+
+    footer { 
+      margin-top: 40px; 
+      color: var(--muted); 
+      text-align: center; 
+      font-size: 13px; 
+    }
+    .divider { 
+      height: 1px; 
+      background: linear-gradient(90deg, transparent, #22293a, transparent); 
+      margin: 14px 0 0; 
+    }
+
+    .profile { 
+      padding: 18px; 
+      background: #0f1219; 
+      border: 1px solid #1b2130; 
+      border-radius: var(--radius); 
+    }
+    .profile h3 { 
+      margin: 0 0 10px; 
+    }
+    
+    /* Анимации */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .section {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    
+    .section:nth-child(2) { animation-delay: 0.1s; }
+    .section:nth-child(3) { animation-delay: 0.2s; }
+    .section:nth-child(4) { animation-delay: 0.3s; }
+    .section:nth-child(5) { animation-delay: 0.4s; }
+    .section:nth-child(6) { animation-delay: 0.5s; }
+    .section:nth-child(7) { animation-delay: 0.6s; }
+    .section:nth-child(8) { animation-delay: 0.7s; }
+    .section:nth-child(9) { animation-delay: 0.8s; }
+    
+    /* Мобильное меню для навигации */
+    .toc-toggle {
+      display: none;
+      background: var(--brand);
+      color: #000;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+    
+    @media (max-width: 768px) {
+      .toc-toggle {
+        display: block;
+      }
+      
+      .toc {
+        display: none;
+      }
+      
+      .toc.active {
+        display: block;
+      }
+      
+      .toc-links {
+        flex-direction: column;
+      }
+      
+      .brand {
+        font-size: 22px;
+      }
+      
+      .subtitle {
+        font-size: 16px;
+      }
+    }
+    
+    /* Улучшения для таблиц на мобильных */
+    @media (max-width: 640px) {
+      th, td {
+        padding: 8px 6px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand"> AXL Team — Инновационные решения для цифрового мира</div>
+      <div class="subtitle">Пакет кворков для KWORK: названия, описания, состав, тарифы и ключевые слова</div>
+      <div class="meta-grid">
+        <span class="chip">Стек: HTML, CSS, JS, Python (Flask, Django, FastAPI)</span>
+        <span class="chip">Боты: Python + aiogram / telebot</span>
+        <span class="chip">Дизайн: Figma, Photoshop, Illustrator, Canva</span>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="profile">
+        <h3>О команде</h3>
+        <p>AXL Team — объединение специалистов, занимающихся общим делом. Команда из 3 человек: фулл‑стек разработчик и дизайнер, разработчик и менеджер/тестировщик. Работаем быстро, качественно и «с душой в коде». Предоставляем поддержку до 6 месяцев.</p>
+      </div>
+    </section>
+
+    <button class="toc-toggle" onclick="document.querySelector('.toc').classList.toggle('active')">Показать/скрыть содержание</button>
+    
+    <nav class="toc">
+      <h3>Содержание</h3>
+      <div class="toc-links">
+        <a href="#g1">1. Сайт под ключ</a>
+        <a href="#g2">2. Веб‑визитка</a>
+        <a href="#g3">3. Корпоративный сайт</a>
+        <a href="#g4">4. Верстка и адаптив</a>
+        <a href="#g5">5. UI/UX дизайн</a>
+        <a href="#g6">6. Логотипы</a>
+        <a href="#g7">7. Telegram‑боты</a>
+        <a href="#g8">8. Дизайн презентаций</a>
+      </div>
+    </nav>
+
+    <!-- GIG 1 -->
+    <section id="g1" class="section card">
+      <div class="card-header">
+        <span class="eyebrow">Кворк №1</span>
+        <h2 class="h2">Создам современный сайт под ключ — адаптивный, быстрый, продающий</h2>
+        <p class="desc">От идеи и дизайна до запуска и поддержки. Уникальный макет, быстрый код, полная адаптивность.</p>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div>
+            <h3>Что входит</h3>
+            <ul class="list">
+              <li>Дизайн в Figma (индивидуальный подход)</li>
+              <li>Верстка и фронтенд‑разработка</li>
+              <li>Интеграция с CRM и мессенджерами (по запросу)</li>
+              <li>Подключение аналитики (GA/Метрика)</li>
+              <li>Базовая SEO‑оптимизация</li>
+              <li>Бесплатная поддержка до 6 месяцев</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Преимущества</h3>
+            <ul class="list">
+              <li>Скорость запуска и понятные сроки</li>
+              <li>Чистый, быстрый и поддерживаемый код</li>
+              <li>Адаптив на все устройства</li>
+              <li>Современный стек: HTML, CSS, JS, Python (Flask/Django)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Тариф</th><th>Страницы</th><th>Дизайн</th><th>Адаптив</th><th>SEO</th><th>Поддержка</th><th>Срок</th><th>Цена</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Базовый</td><td>до 3</td><td>Шаблон</td><td>✔</td><td>—</td><td>1 мес</td><td>5 дней</td><td>7 000 ₽</td></tr>
+              <tr><td>Стандарт</td><td>до 7</td><td>Индивидуальный</td><td>✔</td><td>Базовое</td><td>3 мес</td><td>10 дней</td><td>15 000 ₽</td></tr>
+              <tr><td>Премиум</td><td>до 15</td><td>UI/UX</td><td>✔</td><td>Расширенное</td><td>6 мес</td><td>15 дней</td><td>25 000 ₽</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="kw">
+          <span class="chip">сайт под ключ</span>
+          <span class="chip">создание сайта</span>
+          <span class="chip">разработка сайта</span>
+          <span class="chip">адаптивный сайт</span>
+          <span class="chip">современный сайт</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GIG 2 -->
+    <section id="g2" class="section card">
+      <div class="card-header">
+        <span class="eyebrow">Кворк №2</span>
+        <h2 class="h2">Создам современную веб‑визитку для бизнеса или личного бренда</h2>
+        <p class="desc">Минимум страниц — максимум пользы: контакты, услуги, описание, формы обратной связи.</p>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div>
+            <h3>Что входит</h3>
+            <ul class="list">
+              <li>Уникальный дизайн в фирменном стиле</li>
+              <li>Адаптивная верстка</li>
+              <li>Контактные формы / лид‑формы</li>
+              <li>Настройка домена и хостинга</li>
+              <li>Подключение аналитики</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Тарифы</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Тариф</th><th>Страницы</th><th>Дизайн</th><th>Адаптив</th><th>SEO</th><th>Поддержка</th><th>Срок</th><th>Цена</th></tr></thead>
+                <tbody>
+                  <tr><td>Базовый</td><td>1</td><td>Шаблон</td><td>✔</td><td>—</td><td>1 мес</td><td>3 дня</td><td>3 500 ₽</td></tr>
+                  <tr><td>Стандарт</td><td>2</td><td>Индивидуальный</td><td>✔</td><td>Базовое</td><td>3 мес</td><td>5 дней</td><td>7 000 ₽</td></tr>
+                  <tr><td>Премиум</td><td>3</td><td>UI/UX</td><td>✔</td><td>Расширенное</td><td>6 мес</td><td>7 дней</td><td>12 000 ₽</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="kw"><span class="chip">веб‑визитка</span><span class="chip">сайт‑визитка</span><span class="chip">сайт для бизнеса</span></div>
+      </div>
+    </section>
+
+    <!-- GIG 3 -->
+    <section id="g3" class="section card">
+      <div class="card-header">
+        <span class="eyebrow">Кворк №3</span>
+        <h2 class="h2">Разработаю корпоративный сайт для вашей компании</h2>
+        <p class="desc">Полноценный корпоративный сайт с уникальным дизайном, продуманной структурой и быстрой работой.</p>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div>
+            <h3>Что входит</h3>
+            <ul class="list">
+              <li>UI/UX‑дизайн и прототипирование</li>
+              <li>Верстка + backend (Flask/Django/FastAPI)</li>
+              <li>Подключение аналитики</li>
+              <li>SEO‑настройки</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Тарифы</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Тариф</th><th>Страницы</th><th>Дизайн</th><th>SEO</th><th>Поддержка</th><th>Срок</th><th>Цена</th></tr></thead>
+                <tbody>
+                  <tr><td>Базовый</td><td>до 5</td><td>Шаблон</td><td>—</td><td>1 мес</td><td>7 дней</td><td>12 000 ₽</td></tr>
+                  <tr><td>Стандарт</td><td>до 10</td><td>Индивидуальный</td><td>Базовое</td><td>3 мес</td><td>14 дней</td><td>25 000 ₽</td></tr>
+                  <tr><td>Премиум</td><td>до 20</td><td>Полный UI/UX</td><td>Расширенное</td><td>6 мес</td><td>21 день</td><td>40 000 ₽</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="kw"><span class="chip">корпоративный сайт</span><span class="chip">сайт компании</span><span class="chip">сайт для бизнеса</span></div>
+      </div>
+    </section>
+
+    <!-- GIG 4 -->
+    <section id="g4" class="section card">
+      <div class="card-header">
+        <span class="eyebrow">Кворк №4</span>
+        <h2 class="h2">Сверстаю сайт любой сложности — чисто, быстро, адаптивно</h2>
+        <p class="desc">Верстаем по макетам или с нуля. Чистый код, кроссбраузерность, высокая производительность.</p>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div>
+            <h3>Состав работ</h3>
+            <ul class="list">
+              <li>Pixel‑perfect по Figma</li>
+              <li>Мобильная адаптация и ретина‑графика</li>
+              <li>Оптимизация скорости</li>
+              <li>Анимации и интерактив</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Тарифы</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Тариф</th><th>Страницы</th><th>Макет</th><th>Адаптив</th><th>Оптимизация</th><th>Срок</th><th>Цена</th></tr></thead>
+                <tbody>
+                  <tr><td>Базовый</td><td>до 2</td><td>Готовый</td><td>✔</td><td>—</td><td>3 дня</td><td>4 000 ₽</td></tr>
+                  <tr><td>Стандарт</td><td>до 5</td><td>Правки</td><td>✔</td><td>Базовая</td><td>7 дней</td><td>8 000 ₽</td></tr>
+                  <tr><td>Премиум</td><td>до 10</td><td>Полный дизайн</td><td>✔</td><td>Максимальная</td><td>14 дней</td><td>15 000 ₽</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="kw"><span class="chip">верстка сайта</span><span class="chip">адаптивная верстка</span><span class="chip">фронтенд</span></div>
+      </div>
+    </section>
+
+    <!-- GIG 5 -->
+    <section id="g5" class="section card">
+      <div class="card-header">
+        <span class="eyebrow">Кворк №5</span>
+        <h2 class="h2">Разработаю UI/UX‑дизайн сайта или веб‑приложения</h2>
+        <p class="desc">Продуманные интерфейсы, которые удобны пользователю и работают на бизнес‑цели.</p>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div>
+            <h3>Состав работ</h3>
+            <ul class="list">
+              <li>Дизайн‑концепция и референсы</li>
+              <li>Прототипы (по тарифу)</li>
+              <li>UI‑макеты, сетка и компоненты</li>
+              <li>UI‑kit/дизайн‑система (по тарифу)</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Тарифы</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Тариф</th><th>Экраны</th><th>Прототип</th><th>UI‑kit</th><th>Срок</th><th>Цена</th></tr></thead>
+                <tbody>
+                  <tr><td>Базовый</td><td>до 3</td><td>—</td><td>—</td><td>3 дня</td><td>5 000 ₽</td></tr>
+                  <tr><td>Стандарт</td><td>до 7</td><td>✔</td><td>Базовый</td><td>7 дней</td><td>12 000 ₽</td></tr>
+                  <tr><td>Премиум</td><td>до 15</td><td>✔</td><td>Полный</td><td>14 дней</td><td>25 000 ₽</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="kw"><span class="chip">ui ux дизайн</span><span class="chip">figma дизайн</span><span class="chip">веб‑дизайн</span></div>
+      </div>
+    </section>
+
+    <!-- GIG 6 -->
+    <section id="g6" class="section card">
+      <div class="card-header">
+        <span class="eyebrow">Кворк №6</span>
+        <h2 class="h2">Разработаю уникальный логотип для бренда или бизнеса</h2>
+        <p class="desc">Фирменные знаки, отражающие характер бренда. Варианты, правки и готовые файлы.</p>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div>
+            <h3>Что входит</h3>
+            <ul class="list">
+              <li>Бриф и анализ референсов</li>
+              <li>Несколько направлений логотипа</li>
+              <li>Цветовые и черно‑белые версии</li>
+              <li>Исходники (SVG/PNG/PDF)</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Тарифы</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Тариф</th><th>Варианты</th><th>Правки</th><th>Срок</th><th>Цена</th></tr></thead>
+                <tbody>
+                  <tr><td>Базовый</td><td>1</td><td>1</td><td>2 дня</td><td>2 500 ₽</td></tr>
+                  <tr><td>Стандарт</td><td>3</td><td>3</td><td>5 дней</td><td>6 000 ₽</td></tr>
+                  <tr><td>Премиум</td><td>5</td><td>Без ограничений</td><td>7 дней</td><td>10 000 ₽</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="kw"><span class="chip">логотип</span><span class="chip">создание логотипа</span><span class="chip">фирменный стиль</span></div>
+      </div>
+    </section>
+
+    <!-- GIG 7 -->
+    <section id="g7" class="section card">
+      <div class="card-header">
+        <span class="eyebrow">Кворк №7</span>
+        <h2 class="h2">Разработаю Telegram‑бота для бизнеса, сервиса или личного проекта</h2>
+        <p class="desc">От простых чат‑ботов до интегрированных сервисов с БД и внешними API.</p>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div>
+            <h3>Возможности</h3>
+            <ul class="list">
+              <li>aiogram / telebot, webhook/long‑polling</li>
+              <li>Базы данных: SQLite/MySQL</li>
+              <li>Интеграции: платежи, CRM, внешние API</li>
+              <li>Панель администратора / модерация</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Тарифы</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Тариф</th><th>Функции</th><th>БД</th><th>Интеграции</th><th>Срок</th><th>Цена</th></tr></thead>
+                <tbody>
+                  <tr><td>Базовый</td><td>до 3</td><td>—</td><td>—</td><td>5 дней</td><td>6 000 ₽</td></tr>
+                  <tr><td>Стандарт</td><td>до 7</td><td>✔</td><td>✔</td><td>10 дней</td><td>15 000 ₽</td></tr>
+                  <tr><td>Премиум</td><td>15+</td><td>✔</td><td>Полные</td><td>20 дней</td><td>30 000 ₽</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="kw"><span class="chip">telegram бот</span><span class="chip">разработка бота</span><span class="chip">бот для бизнеса</span></div>
+      </div>
+    </section>
+
+    <!-- GIG 8 -->
+    <section id="g8" class="section card">
+      <div class="card-header">
+        <span class="eyebrow">Кворк №8</span>
+        <h2 class="h2">Разработаю современную и стильную презентацию</h2>
+        <p class="desc">Продающие, визуально привлекательные и понятные презентации для бизнеса, проектов и стартапов.</p>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div>
+            <h3>Состав работ</h3>
+            <ul class="list">
+              <li>Сценарий и структура</li>
+              <li>Дизайн‑модуль в Figma / PowerPoint</li>
+              <li>Анимация и интерактив (по тарифу)</li>
+              <li>Готовые файлы (PPTX/PDF)</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Тарифы</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Тариф</th><th>Слайды</th><th>Дизайн</th><th>Анимация</th><th>Срок</th><th>Цена</th></tr></thead>
+                <tbody>
+                  <tr><td>Базовый</td><td>до 5</td><td>Шаблон</td><td>—</td><td>3 дня</td><td>3 500 ₽</td></tr>
+                  <tr><td>Стандарт</td><td>до 15</td><td>Индивидуальный</td><td>✔</td><td>7 дней</td><td>7 500 ₽</td></tr>
+                  <tr><td>Премиум</td><td>до 30</td><td>Полный бренд‑подход</td><td>✔</td><td>14 дней</td><td>15 000 ₽</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="kw"><span class="chip">дизайн презентаций</span><span class="chip">презентация под ключ</span><span class="chip">продающая презентация</span></div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="divider"></div>
+      <p>Готово к загрузке на KWORK. Стоимости установлены заниженными для старта — можно скорректировать позже.</p>
+    </footer>
+  </div>
+  
+  <script>
+    // Простая функция для плавной прокрутки к якорям
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
